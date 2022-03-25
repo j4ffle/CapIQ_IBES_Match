@@ -100,6 +100,10 @@ proc sort data = merged2 out = merged3 nodupkey; by transcriptpersonid amaskcd c
 where _merge = 1;
 run;
 
+* Count the number of analyst-firm-year matches at the companyofperson level to prepare to map estimid to companyofperson
+    - where last name, company and year are exact matches
+    - If an analyst switches brokers midyear, they may create two matches between the esimid and the companyofperson
+    - We keep the most frequent match betweem companyofperson and estimid as the valid match;
 proc sql;
 	create table brokers2 as select distinct
 	companyofperson, estimid,
@@ -112,14 +116,15 @@ proc sort data=brokers2;
 	by companyofperson descending n_matches;
 	where companyofperson ne "";
 run;
-
+* keep estimid - companyofperson match with the most number of matches;
 proc sort data = brokers2 out = brokers3 nodupkey; by companyofperson;
 run;
 * 4,066 unique company of person matched to 1 estimid;
 
 proc sort data=brokers3 out=brokers4; by estimid descending n_matches;
 run;
-
+* companyofperson contains multiple variations of the same name. To fix this, we get the importance of each companyofperson
+    for the estimid;
 proc sql;
 	create table brokers5 as select distinct *,
 	sum(n_matches) as total_estimid
@@ -142,8 +147,6 @@ proc sql;
 	order by estimid,pct_total desc;
 quit;
 
-data capiqadj.CIQ_IBESBrokerTranslation; set brokers7;
-run;
 data db_match.CIQ_IBESBrokerTranslation_V2; set brokers7;
 run;
 

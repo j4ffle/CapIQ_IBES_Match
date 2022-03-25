@@ -1,22 +1,23 @@
-libname CapIQ "G:\My Drive\Research\FLP_Analyst_Soft_Skills\FLP_Analyst_Skill_Shared\Data\Capital IQ";
-libname CapIQadj "G:\My Drive\Research\FLP_Analyst_Soft_Skills\FLP_Analyst_Skill_Shared\Data\Capital IQ\Adjusted";
-libname ibes "G:\My Drive\Research\RA Stuff\SAS\Data Files\IBES";
-libname dat "G:\My Drive\Research\RA Stuff\SAS\Data Files";
-libname db "C:\Users\flakej\Dropbox\LZ_information\analysis\capitaliq_transcripts";
-libname db_match "C:\Users\flakej\Dropbox\LZ_information\analysis\capitaliq_ibes_match";
+* User inputs;
+%let path = ""; /*define path to location of data*/
+%let iclink = iclink_feb_2021;
 
+* Path to Capital IQ data;
+libname ciq "&path\data\capitalIQ_raw"; /* Can also modify to run this on WRDS */
+libname adj "&path\data\capitalIQ_adj";
+libname ibes "&path\data\ibes"; /* library with ptgdet, recddet, and IBES-PERMNO link files from IBES */
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 1: Get analyst-firm-years from Capital IQ;
-* - Start with analyst-event level dataset from "Sample CapIQ Code_MP.sas" (capiq_analystq_transcript.sas7bdat);
+* - Start with analyst-event level dataset from "analyst_events.sas" (capiq_analystq_transcript.sas7bdat);
 * - Merge in transcriptpersonname and companyname (companyofperson);
 * - Export transcriptpersonid,gvkey, year observations to Python to format last name to merge with IBES;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 /* 
-See Part 1 of "Sample CapIQ Code_MP.sas"
+See "analyst_events.sas"
 */
 
-data work.capiq_analystquestions; set CapIQadj.capiq_analystq_transcript;
+data capiq_analystquestions; set adj.capiq_analystq_transcript;
 run;
 
 proc sort data = capiq_analystquestions out = analyst_transcript nodupkey; 
@@ -28,7 +29,8 @@ year = year(mostimportantdateutc);
 drop mostimportantdateutc;
 run;
 
-* Merge in analyst name and analyst's company name;
+* Merge in analyst name and analyst's company name 
+	- if you keep companyofperson and transcriptpersonname from wrds_transcript_person file, this step may not be necessary;
 proc sql;
 	create table ciqafy as select distinct
 	a.*, b.transcriptpersonname, coalescec(b.companyname,c.companyname) as companyofperson
@@ -42,8 +44,8 @@ quit;
 proc sort data = ciqafy out = ciqafy2 nodupkey; 
 by gvkey transcriptpersonid companyofperson year;
 run;
-
-data capiqAdj.CIQAnalystFirmYear; set ciqAFY2;
+* Save dataset with unique analyst-firm-year obsercations from Capital IQ;
+data adj.CIQAnalystFirmYear; set ciqAFY2;
 where transcriptpersonname not in ("Unknown Analyst","Unkown Analyst","Unidentified Audience Member");
 run;
 * 794k analyst, firm, years;
@@ -54,7 +56,7 @@ keep = transcriptpersonid transcriptpersonname companyofperson) nodupkey;
 by transcriptpersonid companyofperson;
 run;
 
-data capiqAdj.CIQAnalysts; set CIQAnalysts;
+data adj.CIQAnalysts; set CIQAnalysts;
 where transcriptpersonname not in ("Unknown Analyst","Unidentified Audience Member");
 run;
 * 112,764 unique transcriptpersonid's;
@@ -65,7 +67,7 @@ keep = companyofperson) nodupkey;
 by companyofperson;
 run;
 
-data capiqAdj.CIQBrokers; set CIQBrokers;
+data adj.CIQBrokers; set CIQBrokers;
 where companyofperson ne "";
 run;
 * 16,399 unique companyofperson;
@@ -94,7 +96,7 @@ run;
 
 proc sort data = recafy out = recafy2 nodupkey; by ticker estimid amaskcd analyst year;
 run;
-
+/*
 data epsafy; set ibes.det_epsus_20180426 (keep = ticker analys anndats);
 year = year(anndats);
 run;
@@ -112,7 +114,7 @@ quit;
 
 proc sort data = epsafy3 out = epsafy4 nodupkey; by ticker estimid analys eps_analyst year;
 run;
-
+*/
 proc sql;
 	create table ibesafy as select
 	a.ticker as pt_ticker, a.estimid as pt_estimid, a.alysnam as pt_analyst, 
@@ -154,7 +156,7 @@ run;
 proc sql;
 	create table ibesafy4 as select
 	a.*, b.permno
-	from ibesafy3 as a left join dat.iclink_feb_2021 as b
+	from ibesafy3 as a left join ibes.&iclink as b
 	on a.ticker = b.ticker;
 quit;
 
@@ -212,14 +214,14 @@ quit;
 
 proc sort data = ibesafy7 nodupkey; by ticker permno gvkey estimid analyst amaskcd year;
 run;
-
+* restrict to firms with valid identifiers for CRSP, COMPUSTAT, and IBES;
 data ibesafy8; set ibesafy7;
 if ticker ne "" and permno ne . and gvkey ne "" and estimid ne "" and analyst ne "" and amaskcd ne . and year ne .;
 run;
 
 * Save to permanent folder;
 * Unique analyst-firm-year observations;
-data capiqadj.IBESanalystFirmYear; set ibesafy8;
+data adj.IBESanalystFirmYear; set ibesafy8;
 where analyst ne "RESEARCH DEPARTMEN";
 run;
 
@@ -229,7 +231,7 @@ proc sort data = ibesafy8 out = IBESAnalysts
 by amaskcd;
 run;
 
-data capiqAdj.IBESAnalysts; set IBESAnalysts;
+data adj.IBESAnalysts; set IBESAnalysts;
 where analyst ne "RESEARCH DEPARTMEN";
 run;
 * 18,539 unique amaskcd's;
@@ -241,7 +243,7 @@ by estimid;
 run;
 * 1,160 unique estimid's;
 
-data capiqAdj.IBESBrokers; set IBESBrokers;
+data adj.IBESBrokers; set IBESBrokers;
 run;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 3: Take to Python to format names for merge;

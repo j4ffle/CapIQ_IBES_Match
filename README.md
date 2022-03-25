@@ -14,7 +14,7 @@ To create ciq_ibesbrokertranslation and ciq_ibesanalysttranslation files:
     c. Merge in GVKEY from wrds_gvkey (on companyid) file and person and companyofperson names from the ciqtranscriptperson (on transcriptpersonid) and wrds_professional (on proid).
     d. Reduce to unique analyst-broker-firm-year observations.
     e. Remove observations where transcriptpersonname is any of "Unknown Analyst", "Unkown Analyst", or "Unidentified Audience Member".
-3. Extract and standardize the last name from both IBES and CIQ datasets in Python (ciq_ibes_format_names.py).
+3. Extract and standardize the last name from both IBES and CIQ datasets in Python (ibes_capiq_format_names.ipynb).
     a. Remove suffixes such as Jr, III, CFA, etc.
     b. Remove non-standard characters.
     c. Remove spaces and hyphens for analysts with two last names.
@@ -24,3 +24,10 @@ To create ciq_ibesbrokertranslation and ciq_ibesanalysttranslation files:
     c. Create an analyst matched dataset by reducing the merged dataset to unique transcriptpersonid-amaskcd matches.
     d. Due to analysts’ switching firms and brokerage mergers, some companyofperson names have multiple estimid matches. To remove these incorrect matches, we count all the individual analyst-firm-year matches used to compose the companyofperson-estimid match and keep the pair with the greatest number of matches.
     e. Due to non-standardized companyofperson names prior to 2012 in the CIQ database, many broker names are used only a handful of times and/or are misspelled and at times, this may lead to an incorrect match. We sum the total number of matches under each remaining companyofperson by estimid and produce the percent of the matches for that estimid contributed by that companyofperson and keep those matches comprising greater than 1% of that estimid’s matches.
+
+Order of code:
+
+1. analyst_events.sas
+2. ibes_capiq_prep_files.sas
+3. ibes_capiq_format_names.ipynb
+4. merge.sas
