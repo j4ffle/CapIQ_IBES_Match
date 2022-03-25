@@ -14,7 +14,7 @@ To create ciq_ibesbrokertranslation and ciq_ibesanalysttranslation files:
     c. Merge in GVKEY from wrds_gvkey (on companyid) file and person and companyofperson names from the ciqtranscriptperson (on transcriptpersonid) and wrds_professional (on proid).
     d. Reduce to unique analyst-broker-firm-year observations.
     e. Remove observations where transcriptpersonname is any of "Unknown Analyst", "Unkown Analyst", or "Unidentified Audience Member".
-3. Extract and standardize the last name from both IBES and CIQ datasets in Python (CIQ_IBES_PrepMerge.py).
+3. Extract and standardize the last name from both IBES and CIQ datasets in Python (ciq_ibes_format_names.py).
     a. Remove suffixes such as Jr, III, CFA, etc.
     b. Remove non-standard characters.
     c. Remove spaces and hyphens for analysts with two last names.
