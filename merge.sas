@@ -1,7 +1,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 4: Merge on analyst, firm, years;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-%let ciqfile = "G:\My Drive\Research\FLP_Analyst_Soft_Skills\FLP_Analyst_Skill_Shared\Data\Capital IQ\Adjusted\ciqAFY_FmtdNms.csv";
+%include "CapIQ_IBES_Match\ciqAFY_FmtdNms.csv";
 
 data ciqafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */
