@@ -32,8 +32,6 @@ data ciqafy_merge;
 if _ERROR_ then call symputx('_EFIERR_',1);
 run;
 
-%let ibesfile = "G:\My Drive\Research\FLP_Analyst_Soft_Skills\FLP_Analyst_Skill_Shared\Data\Capital IQ\Adjusted\ibesAFY_FmtdNms.csv";
-
 data ibesafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */
 	infile &ibesfile delimiter = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
