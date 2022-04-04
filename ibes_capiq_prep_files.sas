@@ -1,11 +1,5 @@
-* User inputs;
-%let path = ""; /*define path to location of data*/
-%let iclink = iclink_feb_2021;
-
-* Path to Capital IQ data;
-libname ciq "&path\data\capitalIQ_raw"; /* Can also modify to run this on WRDS */
-libname adj "&path\data\capitalIQ_adj";
-libname ibes "&path\data\ibes"; /* library with ptgdet, recddet, and IBES-PERMNO link files from IBES */
+* Read in user inputs;
+%include "/CapIQ_IBES_Match/inputs.sas"
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 1: Get analyst-firm-years from Capital IQ;
