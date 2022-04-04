@@ -1,5 +1,5 @@
 * Read in user inputs;
-%include "/CapIQ_IBES_Match/inputs.sas"
+%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas"
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 1: Get analyst-firm-years from Capital IQ;
@@ -151,7 +151,9 @@ proc sql;
 	create table ibesafy4 as select
 	a.*, b.permno
 	from ibesafy3 as a left join ibes.&iclink as b
-	on a.ticker = b.ticker;
+	on a.ticker = b.ticker
+	and (year(b.sdate) le a.year or sdate = .)
+	and (a.year le year(b.edate) or edate = .);
 quit;
 
 data ibesafy5; set ibesafy4;
@@ -242,4 +244,4 @@ run;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 3: Take to Python to format names for merge;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-* ciq_ibes_format_names.ipynb
+* ibes_capiq_format_names.ipynb

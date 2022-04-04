@@ -1,6 +1,6 @@
 * User inputs;
-%let path = ""; /*define path to location of data*/
-%let iclink = iclink_feb_2021;
+%let path = "C:\Users\flakej\Dropbox\Research\LZ_information\analysis\capitaliq_transcripts"; /*define path to location of data*/
+%let iclink = iclink_20210121;
 
 * Path to Capital IQ data;
 libname ciq "&path\data\capitalIQ_raw"; /* Can also modify to run this on WRDS */
