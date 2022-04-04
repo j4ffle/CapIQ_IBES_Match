@@ -1,5 +1,5 @@
 * Read in user inputs;
-%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas"
+%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
 
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 1: Get analyst-firm-years from Capital IQ;
@@ -29,8 +29,8 @@ proc sql;
 	create table ciqafy as select distinct
 	a.*, b.transcriptpersonname, coalescec(b.companyname,c.companyname) as companyofperson
 	from company_analyst as a 
-		left join capiq.ciqtranscriptperson as b on a.transcriptpersonid = b.transcriptpersonid
-		left join db.wrds_professional as c on a.proid = c.proid
+		left join ciq.ciqtranscriptperson as b on a.transcriptpersonid = b.transcriptpersonid
+		left join ciq.wrds_professional as c on a.proid = c.proid
 order by gvkey, transcriptpersonid, companyofperson, year;
 quit;
 

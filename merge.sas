@@ -1,7 +1,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 4: Merge on analyst, firm, years;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-%include "CapIQ_IBES_Match\ciqAFY_FmtdNms.csv";
+%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
 
 data ciqafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */
@@ -140,12 +140,12 @@ run;
 proc sql;
 	create table brokers7 as select
 	a.*, b.*
-	from capiqadj.ciqbrokers as a left join brokers6 as b
+	from adj.ciqbrokers as a left join brokers6 as b
 	on a.companyofperson = b.companyofperson
 	order by estimid,pct_total desc;
 quit;
 
-data db_match.CIQ_IBESBrokerTranslation_V2; set brokers7;
+data db_match.CIQ_IBESBrokerMerge_&date; set brokers7;
 run;
 
 
@@ -167,20 +167,20 @@ proc sort data=analysts nodupkey;
 	where transcriptpersonid ne .;
 run;
 
-data capiqadj.CIQ_IBESAnalystTranslation; set analysts;
+data ad.CIQ_IBESAnalystMerge_&date; set analysts;
 run;
-data db_match.CIQ_IBESAnalystTranslation_V2; set analysts;
+data db_match.CIQ_IBESAnalystMerge_&date; set analysts;
 run;
 
 
 proc sql;
 	select count(*) as Total_CompanyOfPerson, count(estimid) as Total_Matched
-	from capiqadj.ciq_ibesbrokertranslation;
+	from adj.ciq_ibesbrokerMerge_&date;
 quit;
 
 
 
-proc sort data = capiqadj.ibesanalystfirmyear out = ibes_broker_years (keep = estimid year) nodupkey; by estimid year;
+proc sort data = adj.ibesanalystfirmyear out = ibes_broker_years (keep = estimid year) nodupkey; by estimid year;
 run;
 
 proc sql;
@@ -194,7 +194,7 @@ var year;
 class year;
 run;
 
-proc sort data = capiqadj.ciqanalystfirmyear out = ciq_broker_years (keep = companyofperson year) nodupkey; by companyofperson year;
+proc sort data = adj.ciqanalystfirmyear out = ciq_broker_years (keep = companyofperson year) nodupkey; by companyofperson year;
 run;
 
 proc sql;
@@ -221,5 +221,5 @@ if year = . then year = CIQYear;
 drop CIQYear;
 run;
 
-proc sort data = NBrokersYears out = capiqadj.NBrokerYears; by year;
+proc sort data = NBrokersYears out = adj.NBrokerYears; by year;
 run;
