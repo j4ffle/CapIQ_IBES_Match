@@ -145,7 +145,7 @@ proc sql;
 	order by estimid,pct_total desc;
 quit;
 
-data db_match.CIQ_IBESBrokerMerge_&date; set brokers7;
+data adj.CIQ_IBESBrokerMerge_&date; set brokers7;
 run;
 
 
