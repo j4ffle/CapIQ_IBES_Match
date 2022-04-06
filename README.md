@@ -27,7 +27,7 @@ To create ciq_ibesbrokertranslation and ciq_ibesanalysttranslation files:
 
 Order of code:
 
-1. analyst_events.sas
+1. analyst_events.sas - May need to be run in SAS (Unicode Support)
 2. ibes_capiq_prep_files.sas
 3. ibes_capiq_format_names.ipynb
 4. merge.sas
