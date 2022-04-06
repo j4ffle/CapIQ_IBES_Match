@@ -119,7 +119,7 @@ quit;
 data adj.CIQAnalystFirmYear; set ciqAFY2;
 where transcriptpersonname not in ("Unknown Analyst","Unkown Analyst","Unidentified Audience Member");
 run;
-* 794k analyst, firm, years;
+* 795k analyst, firm, years;
 
 * Unique transcriptpersonid's;
 proc sort data = ciqAFY2 out = CIQAnalysts (
@@ -130,7 +130,7 @@ run;
 data adj.CIQAnalysts; set CIQAnalysts;
 where transcriptpersonname not in ("Unknown Analyst","Unidentified Audience Member");
 run;
-* 112,764 unique transcriptpersonid's;
+* 112,809 unique transcriptpersonid's;
 
 * Unique companyofperson's;
 proc sort data = ciqAFY2 out = CIQBrokers (
