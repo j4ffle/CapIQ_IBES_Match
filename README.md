@@ -2,7 +2,11 @@
 
 ## Create translation files between capital IQ conference call participants and IBES analysts
 
-To create ciq_ibesbrokertranslation and ciq_ibesanalysttranslation files:
+Authors: Jared Flake and Mark Piorkowski
+
+All errors are our own, please send corrections and questions to flakej@bc.edu
+
+To create ciq_ibesbrokermerge_20220406 and ciq_ibesanalystmerge_20220406 files:
 
 1. Create a unique set of analyst-broker-firm-year observations from the combination of the price target and recommendation detail files from IBES that pre-date the significant changes (anonymization and removal of individual analyst data) made in October 2018. The variables remaining in this dataset are ticker (firm ID), estimid (broker ID), analyst (analyst name), year, permno, gvkey, Input datasets (IBES: ptgdet, recddet)
     - Combine price target and recommendation detail files in a full join on ticker, amaskcd, estimid, and year.
@@ -27,7 +31,7 @@ To create ciq_ibesbrokertranslation and ciq_ibesanalysttranslation files:
 
 Order of code:
 
-1. analyst_events.sas - May need to be run in SAS (Unicode Support)
-2. ibes_capiq_prep_files.sas
+1. capiq_prep_files.sas
+2. ibes_prep_files.sas
 3. ibes_capiq_format_names.ipynb
 4. merge.sas
