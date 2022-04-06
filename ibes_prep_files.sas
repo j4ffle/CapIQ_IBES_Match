@@ -1,71 +1,6 @@
 * Read in user inputs;
+/*Need to change the path here*/
 %include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
-
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-*Step 1: Get analyst-firm-years from Capital IQ;
-* - Start with analyst-event level dataset from "analyst_events.sas" (capiq_analystq_transcript.sas7bdat);
-* - Merge in transcriptpersonname and companyname (companyofperson);
-* - Export transcriptpersonid,gvkey, year observations to Python to format last name to merge with IBES;
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-/* 
-See "analyst_events.sas"
-*/
-
-data capiq_analystquestions; set adj.capiq_analystq_transcript;
-run;
-
-proc sort data = capiq_analystquestions out = analyst_transcript nodupkey; 
-by transcriptid transcriptpersonid;
-run;
-
-data company_analyst; set analyst_transcript (keep = transcriptpersonid proid companyid gvkey mostimportantdateutc);
-year = year(mostimportantdateutc);
-drop mostimportantdateutc;
-run;
-
-* Merge in analyst name and analyst's company name 
-	- if you keep companyofperson and transcriptpersonname from wrds_transcript_person file, this step may not be necessary;
-proc sql;
-	create table ciqafy as select distinct
-	a.*, b.transcriptpersonname, coalescec(b.companyname,c.companyname) as companyofperson
-	from company_analyst as a 
-		left join ciq.ciqtranscriptperson as b on a.transcriptpersonid = b.transcriptpersonid
-		left join ciq.wrds_professional as c on a.proid = c.proid
-order by gvkey, transcriptpersonid, companyofperson, year;
-quit;
-
-* Go from analyst-event level data to analyst-gvkey-year;
-proc sort data = ciqafy out = ciqafy2 nodupkey; 
-by gvkey transcriptpersonid companyofperson year;
-run;
-* Save dataset with unique analyst-firm-year obsercations from Capital IQ;
-data adj.CIQAnalystFirmYear; set ciqAFY2;
-where transcriptpersonname not in ("Unknown Analyst","Unkown Analyst","Unidentified Audience Member");
-run;
-* 794k analyst, firm, years;
-
-* Unique transcriptpersonid's;
-proc sort data = ciqAFY2 out = CIQAnalysts (
-keep = transcriptpersonid transcriptpersonname companyofperson) nodupkey; 
-by transcriptpersonid companyofperson;
-run;
-
-data adj.CIQAnalysts; set CIQAnalysts;
-where transcriptpersonname not in ("Unknown Analyst","Unidentified Audience Member");
-run;
-* 112,764 unique transcriptpersonid's;
-
-* Unique companyofperson's;
-proc sort data = ciqAFY2 out = CIQBrokers (
-keep = companyofperson) nodupkey; 
-by companyofperson;
-run;
-
-data adj.CIQBrokers; set CIQBrokers;
-where companyofperson ne "";
-run;
-* 16,399 unique companyofperson;
-
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 2: Get analyst-firm-years from IBES;
 * - Supplement PT data with Rec data to get a more complete panel for each analyst-firm pair 
@@ -90,7 +25,7 @@ run;
 
 proc sort data = recafy out = recafy2 nodupkey; by ticker estimid amaskcd analyst year;
 run;
-/*
+/* EPS data made things messy so stuck with recommendation and target price observations for now
 data epsafy; set ibes.det_epsus_20180426 (keep = ticker analys anndats);
 year = year(anndats);
 run;
