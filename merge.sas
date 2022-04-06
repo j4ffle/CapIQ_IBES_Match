@@ -167,11 +167,8 @@ proc sort data=analysts nodupkey;
 	where transcriptpersonid ne .;
 run;
 
-data ad.CIQ_IBESAnalystMerge_&date; set analysts;
+data adj.CIQ_IBESAnalystMerge_&date; set analysts;
 run;
-data db_match.CIQ_IBESAnalystMerge_&date; set analysts;
-run;
-
 
 proc sql;
 	select count(*) as Total_CompanyOfPerson, count(estimid) as Total_Matched
