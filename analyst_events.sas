@@ -6,7 +6,7 @@ libname adj "&path\data\capitalIQ_adj";
 
 *Count # obs in transcript_person dataset;
 proc sql;
- select count(*) as N from CapIQ.wrds_transcript_person;
+ select count(*) as N from ciq.wrds_transcript_person;
 quit;
 
 
