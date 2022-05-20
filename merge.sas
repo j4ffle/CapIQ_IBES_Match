@@ -6,28 +6,14 @@
 data ciqafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */
 	infile &ciqfile delimiter = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
-	informat transcriptpersonid Best12.;
-	informat proid Best12.;
-	informat companyofperson $94.;
-	informat year Best12.;
-	informat gvkey $6.;
-	informat fname $19.;
-	informat lname $22.;
-	format transcriptpersonid Best12.;
-	format proid Best12.;
-	format companyofperson $94.;
-	format year Best12.;
-	format gvkey $6.;
-	format fname $19.;
-	format lname $22.;
 	input
 		transcriptpersonid
 		proid
-		companyofperson
+		companyofperson :$94.
 		year
-		gvkey
-		fname
-		lname
+		gvkey :$6.
+		fname :$19.
+		lname :$22.
 ;
 if _ERROR_ then call symputx('_EFIERR_',1);
 run;
@@ -35,34 +21,16 @@ run;
 data ibesafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */
 	infile &ibesfile delimiter = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
-	informat ticker $6.;
-	informat estimid $8.;
-	informat amaskcd $8.;
-	informat year Best12.;
-	informat permno Best12.;
-	informat gvkey $6.;
-	informat analyst $20.;
-	informat lname1 $17.;
-	informat lname2 $12.;
-	format ticker $6.;
-	format estimid $8.;
-	format amaskcd $8.;
-	format year Best12.;
-	format permno Best12.;
-	format gvkey $6.;
-	format analyst $20.;
-	format lname1 $18.;
-	format lname1 $12.;
 	input
-		ticker
-		estimid
-		amaskcd
+		ticker :$6.
+		estimid :$8.
+		amaskcd 
 		year
 		permno
-		gvkey
-		analyst
-		lname1
-		lname2
+		gvkey :$6.
+		analyst :$20.
+		lname1 :$18.
+		lname2 :$12.
 ;
 if _ERROR_ then call symputx('_EFIERR_',1);
 run;

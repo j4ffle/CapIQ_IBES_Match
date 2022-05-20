@@ -1,5 +1,5 @@
 * User inputs;
-%let capIQ_path = G:\My Drive\Research\Data; /*define path to location of data*/
+%let capIQ_path = G:\My Drive\Research\FLP_Analyst_Soft_Skills\FLP_Analyst_Skill_Shared\Data; /*define path to location of data*/
 
 * Path to Capital IQ data;
 /* 
@@ -17,7 +17,7 @@ libname ibes "G:\My Drive\Research\SAS\Data Files\IBES";
 
 %let ciqfile = "&capIQ_path\capital IQ\Adjusted\ciqAFY_FmtdNms.csv";
 
-%let ibesfile = "&capIQ_path\capital IQ\Adjusted\ibesAFY_FmtdNms.csv";
+%let ibesfile = "&capIQ_path\capital IQ\Adjusted\ibesAFY_new_vint_FmtdNms.csv";
 
 /*
     Put today's date to use at the end of main output files
