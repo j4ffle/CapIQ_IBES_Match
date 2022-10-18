@@ -6,7 +6,7 @@ Authors: Jared Flake and Mark Piorkowski
 
 All errors are our own, please send corrections and questions to flakej@bc.edu
 
-To create ciq_ibesbrokermerge_20220406 and ciq_ibesanalystmerge_20220406 files:
+To create translation files:
 
 1. Create a unique set of analyst-broker-firm-year observations from the combination of the price target and recommendation detail files from IBES that pre-date the significant changes (anonymization and removal of individual analyst data) made in October 2018. The variables remaining in this dataset are ticker (firm ID), estimid (broker ID), analyst (analyst name), year, permno, gvkey, Input datasets (IBES: ptgdet, recddet)
     - Combine price target and recommendation detail files in a full join on ticker, amaskcd, estimid, and year.
