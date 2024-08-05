@@ -12,7 +12,7 @@ rsubmit;
 libname home '/home/bc/j4ffle';
 endrsubmit;* Read in user inputs;
 /*Need to change the path here*/
-%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "C:\Users\j.flake\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 2: Get analyst-firm-years from IBES;
 * - Supplement PT data with Rec data to get a more complete panel for each analyst-firm pair 
@@ -22,7 +22,7 @@ endrsubmit;* Read in user inputs;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 rsubmit;
 data ptafy; set ibes.ptgdet (keep = ticker estimid amaskcd alysnam anndats USFIRM);
-where USFIRM = 1;
+/*where USFIRM = 1;*/
 YEAR = year(anndats);
 drop USFIRM;
 run;
@@ -31,7 +31,7 @@ proc sort data = ptafy out = ptafy2 nodupkey; by ticker estimid amaskcd alysnam 
 run;
 
 data recafy; set ibes.recddet (keep = ticker estimid amaskcd analyst anndats USFIRM);
-where USFIRM = 1;
+/*where USFIRM = 1;*/
 year = year(anndats);
 drop USFIRM;
 run;
@@ -99,7 +99,7 @@ rsubmit;
 proc sql;
 	create table ibesafy4 as select
 	a.*, b.permno
-	from ibesafy3 as a left join home.iclink_20210121 as b
+	from ibesafy3 as a left join wrdsapps.ibcrsphist as b
 	on a.ticker = b.ticker
 	and (year(b.sdate) le a.year or sdate = .)
 	and (a.year le year(b.edate) or edate = .);
@@ -134,7 +134,7 @@ proc download data = ibesafy8; run;
 endrsubmit;
 * Save to permanent folder;
 * Unique analyst-firm-year observations;
-data adj.IBESanalystFirmYear; set ibesafy8;
+data adj.IBESanalystFirmYear_20240330; set ibesafy8;
 where analyst ne "RESEARCH DEPARTMEN";
 run;
 
@@ -144,7 +144,7 @@ proc sort data = ibesafy8 out = IBESAnalysts
 by amaskcd;
 run;
 
-data adj.IBESAnalysts_202205; set IBESAnalysts;
+data adj.IBESAnalysts_20240330; set IBESAnalysts;
 where analyst ne "RESEARCH DEPARTMEN";
 run;
 * 18,539 unique amaskcd's;
@@ -156,7 +156,7 @@ by estimid;
 run;
 * 1,160 unique estimid's;
 
-data adj.IBESBrokers_202205; set IBESBrokers;
+data adj.IBESBrokers_20240330; set IBESBrokers;
 run;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 3: Take to Python to format names for merge;

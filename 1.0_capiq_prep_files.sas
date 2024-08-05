@@ -1,5 +1,22 @@
+proc printto log = junk; run;
+%let wrds = wrds.wharton.upenn.edu 4016; 
+options comamid=TCP remote=WRDS;
+signon username= _prompt_;
+proc printto; run;
+Libname rwork slibref=work server=wrds;
+
+* Need to move wrds_professional to scratch folder;
+/* In command prompt:
+
+ssh jrffle@wrds-cloud.wharton.upenn.edu
+cd /scratch/bc
+mkdir -p j4ffle
+cd j4ffle
+dbxcli get "/For Cedric/wrds_professional.sas7bdat"
+*/
+
 *Read in user inputs;
-%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "C:\Users\j.flake\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 1: Get analyst-firm-years from Capital IQ;
 * - Start with analyst-event level dataset ;
@@ -7,7 +24,8 @@
 * - Export transcriptpersonid,gvkey, year observations to Python to 
 		format last name to merge with IBES;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-
+rsubmit;
+libname scratch "/scratch/bc/j4ffle";
 *Count # obs in transcript_person dataset and print to output;
 proc sql;
  select count(*) as N from ciq.wrds_transcript_person;
@@ -42,8 +60,7 @@ quit;
 ***Keep FINAL transcripts with non-missing company id from transcript_detail dataset;
 **Keep relevant event types (see below) - may not be necessary;
 data capiq_events; set ciq.Wrds_transcript_detail;
-	where companyid ne . and transcriptpresentationtypename = "Final" and 
-    keydeveventtypeid in (48,49,50,51,52,192);
+	where companyid ne . and transcriptpresentationtypename = "Final";
 	year = year(mostimportantdateutc);
 run;
 *890k obs;
@@ -100,23 +117,30 @@ proc sort data=capiq_analyst_transcript_2 out=capiq_analyst_transcript_3 nodupke
 by transcriptid transcriptpersonid;
 quit;
 *1.58 million obs;
+endrsubmit;
 
+rsubmit;
 * Merge in analyst name and analyst's company name;
 proc sql;
 	create table ciqafy as select distinct
 	a.*, b.transcriptpersonname as transcriptpersonname, coalescec(b.companyname,c.companyname) as companyofperson
 	from capiq_analyst_transcript_3 as a 
 		left join ciq.ciqtranscriptperson as b on a.transcriptpersonid = b.transcriptpersonid
-		left join ciq.wrds_professional as c on a.proid = c.proid;
+		left join scratch.wrds_professional as c on a.proid = c.proid;
 quit;
 
 * Go from analyst-event level data to analyst-gvkey-year;
 proc sort data=ciqafy out=ciqafy2 (drop = transcriptid) nodupkey;
 by gvkey transcriptpersonid companyofperson year;
 quit;
+endrsubmit;
+
+rsubmit;
+proc download data = ciqafy2; run;
+endrsubmit;
 
 * Save dataset with unique analyst-firm-year obsercations from Capital IQ;
-data adj.CIQAnalystFirmYear; set ciqAFY2;
+data adj.CIQAnalystFirmYear_20240330; set ciqAFY2;
 where transcriptpersonname not in ("Unknown Analyst","Unkown Analyst","Unidentified Audience Member");
 run;
 * 795k analyst, firm, years;
@@ -127,7 +151,7 @@ keep = transcriptpersonid transcriptpersonname companyofperson) nodupkey;
 by transcriptpersonid companyofperson;
 run;
 
-data adj.CIQAnalysts; set CIQAnalysts;
+data adj.CIQAnalysts_20240330; set CIQAnalysts;
 where transcriptpersonname not in ("Unknown Analyst","Unidentified Audience Member");
 run;
 * 112,809 unique transcriptpersonid's;
@@ -138,7 +162,7 @@ keep = companyofperson) nodupkey;
 by companyofperson;
 run;
 
-data adj.CIQBrokers; set CIQBrokers;
+data adj.CIQBrokers_20240330; set CIQBrokers;
 where companyofperson ne "";
 run;
 * 16,399 unique companyofperson;

@@ -1,7 +1,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 4: Merge on analyst, firm, years;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "C:\Users\j.flake\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
 
 data ciqafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */
@@ -9,7 +9,7 @@ data ciqafy_merge;
 	input
 		transcriptpersonid
 		proid
-		companyofperson :$94.
+		companyofperson :$92.
 		year
 		gvkey :$6.
 		fname :$19.
@@ -29,7 +29,7 @@ data ibesafy_merge;
 		permno
 		gvkey :$6.
 		analyst :$20.
-		lname1 :$18.
+		lname1 :$17.
 		lname2 :$12.
 ;
 if _ERROR_ then call symputx('_EFIERR_',1);
@@ -145,7 +145,7 @@ quit;
 
 
 
-proc sort data = adj.ibesanalystfirmyear out = ibes_broker_years (keep = estimid year) nodupkey; by estimid year;
+proc sort data = adj.ibesanalystfirmyear_&date out = ibes_broker_years (keep = estimid year) nodupkey; by estimid year;
 run;
 
 proc sql;
@@ -159,7 +159,7 @@ var year;
 class year;
 run;
 
-proc sort data = adj.ciqanalystfirmyear out = ciq_broker_years (keep = companyofperson year) nodupkey; by companyofperson year;
+proc sort data = adj.ciqanalystfirmyear_&date out = ciq_broker_years (keep = companyofperson year) nodupkey; by companyofperson year;
 run;
 
 proc sql;
@@ -186,5 +186,5 @@ if year = . then year = CIQYear;
 drop CIQYear;
 run;
 
-proc sort data = NBrokersYears out = adj.NBrokerYears; by year;
+proc sort data = NBrokersYears out = adj.NBrokerYears_&date; by year;
 run;

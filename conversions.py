@@ -24,7 +24,7 @@ def sas2stata(sasfile,statafile):
     """
     dat = pd.read_sas(sasfile)
     dat.columns = map(str.lower,dat.columns)
-    str_df = dat.select_dtypes([np.object])
+    str_df = dat.select_dtypes([object])
     if str_df.empty == False:
         try:
             str_df = str_df.stack().str.decode('utf-8').unstack()
@@ -55,7 +55,7 @@ def readsas(sasfile):
     """
     dat = pd.read_sas(sasfile)
     dat.columns = map(str.lower,dat.columns)
-    str_df = dat.select_dtypes([np.object])
+    str_df = dat.select_dtypes([object])
     if str_df.empty == False:
         try:
             str_df = str_df.stack().str.decode('utf-8').unstack()
@@ -79,7 +79,7 @@ def sas2csv(sasfile,csvfile,index_out=False):
     """
     dat = pd.read_sas(sasfile)
     dat.columns = map(str.lower,dat.columns)
-    str_df = dat.select_dtypes([np.object])
+    str_df = dat.select_dtypes([object])
     if str_df.empty == False:
         try:
             str_df = str_df.stack().str.decode('utf-8').unstack()

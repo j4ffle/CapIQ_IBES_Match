@@ -15,9 +15,9 @@ libname adj "&capIQ_path\capital IQ\Adjusted";
 libname ibes "G:\My Drive\Research\SAS\Data Files\IBES"; 
 %let iclink = iclink_20210121;
 
-%let ciqfile = "&capIQ_path\capital IQ\Adjusted\ciqAFY_FmtdNms.csv";
+%let ciqfile = "&capIQ_path\capital IQ\Adjusted\ciqAFY_FmtdNms_20240330.csv";
 
-%let ibesfile = "&capIQ_path\capital IQ\Adjusted\ibesAFY_new_vint_FmtdNms.csv";
+%let ibesfile = "&capIQ_path\capital IQ\Adjusted\ibesAFY_new_vint_FmtdNms_20240330.csv";
 
 /*
     Put today's date to use at the end of main output files
