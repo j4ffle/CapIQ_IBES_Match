@@ -4,7 +4,7 @@
 
 Authors: Jared Flake and Mark Piorkowski
 
-All errors are our own, please send corrections and questions to flakej@bc.edu
+All errors are our own, please send corrections and questions to jaredflake@boisestate.edu
 
 To create translation files:
 
