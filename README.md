@@ -22,7 +22,7 @@ To create translation files:
     - Remove suffixes such as Jr, III, CFA, etc.
     - Remove non-standard characters.
     - Remove spaces and hyphens for analysts with two last names.
-4. Merge CIQ and IBES datasets on analyst (amaskcd), firm (gvkey), and year
+4. Merge CIQ and IBES datasets on analyst last name, firm (gvkey), and year
     - Keep only the observations with a proper match.
     - Create a broker matched dataset by reducing the merged dataset to unique companyofperson-estimid matches.+
     - Create an analyst matched dataset by reducing the merged dataset to unique transcriptpersonid-amaskcd matches.
