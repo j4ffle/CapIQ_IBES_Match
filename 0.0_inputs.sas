@@ -1,5 +1,5 @@
 * User inputs;
-%let capIQ_path = ""; /*define path to location of data*/
+%let capIQ_path = /path/to/data; /*define path to location of data*/
 
 * Path to Capital IQ data;
 /* 
