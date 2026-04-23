@@ -8,11 +8,11 @@ Libname rwork slibref=work server=wrds;
 %include "G:\My Drive\Research\SAS\Macro Repository.sas";
 
 rsubmit;
-%include '/home/bc/j4ffle/macros/Macro Repository.sas';
-libname home '/home/bc/j4ffle';
+%include '/home/school_abbrev/user/macros/Macro Repository.sas';
+libname home '/home/school_abbrev/user';
 endrsubmit;* Read in user inputs;
 /*Need to change the path here*/
-%include "C:\Users\j.flake\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "inputs.sas"; /*local sas file that defines macros*/
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 2: Get analyst-firm-years from IBES;
 * - Supplement PT data with Rec data to get a more complete panel for each analyst-firm pair 

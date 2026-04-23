@@ -1,5 +1,5 @@
 * User inputs;
-%let capIQ_path = G:\My Drive\Research\FLP_Analyst_Soft_Skills\FLP_Analyst_Skill_Shared\Data; /*define path to location of data*/
+%let capIQ_path = /path/to/data; /*define path to location of data*/
 
 * Path to Capital IQ data;
 /* 
@@ -13,7 +13,7 @@ libname adj "&capIQ_path\capital IQ\Adjusted";
     library with ptgdet, recddet, and IBES-PERMNO link files from IBES 
 */
 libname ibes "G:\My Drive\Research\SAS\Data Files\IBES"; 
-%let iclink = iclink_20210121;
+%let iclink = iclink_20210121; /*permno to ibes_ticker linking table;*/
 
 %let ciqfile = "&capIQ_path\capital IQ\Adjusted\ciqAFY_FmtdNms_20240330.csv";
 

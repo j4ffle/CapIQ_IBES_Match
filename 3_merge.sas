@@ -1,7 +1,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 4: Merge on analyst, firm, years;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
-%include "C:\Users\j.flake\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "inputs.sas";
 
 data ciqafy_merge;
 	%let _EFIERR_ = 0;	/* set the ERROR detection macro variable */

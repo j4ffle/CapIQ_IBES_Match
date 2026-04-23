@@ -8,15 +8,15 @@ Libname rwork slibref=work server=wrds;
 * Need to move wrds_professional to scratch folder;
 /* In command prompt:
 
-ssh jrffle@wrds-cloud.wharton.upenn.edu
+ssh user@wrds-cloud.wharton.upenn.edu
 cd /scratch/bc
-mkdir -p j4ffle
-cd j4ffle
-dbxcli get "/For Cedric/wrds_professional.sas7bdat"
+mkdir -p user
+cd user
+dbxcli get "/path_to/wrds_professional.sas7bdat"
 */
 
 *Read in user inputs;
-%include "C:\Users\j.flake\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "inputs.sas";
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 1: Get analyst-firm-years from Capital IQ;
 * - Start with analyst-event level dataset ;
@@ -25,7 +25,7 @@ dbxcli get "/For Cedric/wrds_professional.sas7bdat"
 		format last name to merge with IBES;
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 rsubmit;
-libname scratch "/scratch/bc/j4ffle";
+libname scratch "/scratch/school_abbrev/user";
 *Count # obs in transcript_person dataset and print to output;
 proc sql;
  select count(*) as N from ciq.wrds_transcript_person;

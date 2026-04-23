@@ -4,7 +4,7 @@
 
 Authors: Jared Flake and Mark Piorkowski
 
-All errors are our own, please send corrections and questions to flakej@bc.edu
+All errors are our own, please send corrections and questions to jaredflake@boisestate.edu
 
 To create translation files:
 
@@ -32,6 +32,6 @@ To create translation files:
 Order of code:
 
 1. capiq_prep_files.sas
-2. ibes_prep_files.sas
+2. ibes_prep_files.sas 
 3. ibes_capiq_format_names.ipynb
 4. merge.sas

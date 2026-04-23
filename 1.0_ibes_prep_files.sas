@@ -1,6 +1,6 @@
 * Read in user inputs;
 /*Need to change the path here*/
-%include "C:\Users\flakej\Dropbox\GitHub\CapIQ_IBES_Match\inputs.sas";
+%include "inputs.sas"; /*local sas file to define macros;*/
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~;
 *Step 2: Get analyst-firm-years from IBES;
 * - Supplement PT data with Rec data to get a more complete panel for each analyst-firm pair 
